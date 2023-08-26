@@ -44,7 +44,8 @@ const twitterpost = async (req, res) => {
             videoUrl: videoElement.src,
           };
         });
-
+        console.log("==================================")
+        console.log("tweetdata url",tweetData.videoUrl)
         return tweetData.videoUrl;
       } catch (error) {
         console.error("Error:", error);
