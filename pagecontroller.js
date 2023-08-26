@@ -56,7 +56,9 @@ const twitterpost = async (req, res) => {
 
     const videoUrl = await getVideoUrl(url);
     const response = await axios.get(videoUrl, { responseType: "arraybuffer" });
+    console.log("response.data ++++++++++++++++++++++++++++++++++++++++++++++++");
     console.log(response.data);
+    console.log("response.data ++++++++++++++++++++++++++++++++++++++++++++++++");
     if (videoUrl) {
       // Instead of saving the file, send the video URL to the client
       res.render("index", { downloadUrl: videoUrl });
