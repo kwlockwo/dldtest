@@ -61,7 +61,7 @@
       }
     </style>
   </head>
-  <body style="background-color: cyan">
+  <body style="background-color: rgb(173, 134, 192)">
     <!-- Add this code snippet inside the <div class="card-body"> element -->
     <div class="card-body">
       <div
@@ -134,13 +134,12 @@
         <% if (downloadUrl) { %>
 
         <!-- Style the download link -->
-        <a
-          href="<%= downloadUrl %>"
-          download
-          class="btn btn-primary mt-10"
-          style="margin-top: 20px"
-          >Download Video</a
-        >
+        <form action="/download" method="post">
+          <!-- Other form fields -->
+          <input type="hidden" name="videoUrl" value="<%= downloadUrl %>">
+          <button type="submit">Download</button>
+        </form>
+        
         <% } %>
       </div>
     </div>
