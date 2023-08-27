@@ -12,7 +12,7 @@ const showhomepage = async (req, res) => {
 };
 
 const getDirectVideoUrl = async (instagramUrl) => {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
 
   await page.setRequestInterception(true);
