@@ -20,28 +20,129 @@
     <!-- Navigation-->
     <title>Twitter Download zone</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <link href="/css/styles.css" rel="stylesheet" />
-  </head>
-  <body>
+    <!-- <link href="/css/styles.css" rel="stylesheet" /> -->
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f0f0f0;
+      }
 
+      .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px; /* Adjust the maximum width as needed */
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        overflow: hidden;
+      }
+
+      .video-container video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Media query for screens smaller than 768px */
+      @media (max-width: 768px) {
+        .video-container {
+          max-width: 100%; /* Adjust container width for smaller screens */
+        }
+
+        .form-control {
+          width: 100%; /* Make input full width on smaller screens */
+          margin: 10px 0; /* Adjust input margins */
+        }
+      }
+    </style>
+  </head>
+  <body style="background-color: cyan">
     <!-- Add this code snippet inside the <div class="card-body"> element -->
-<!-- Add this code snippet inside the <div class="card-body"> element -->
-  <div class="card-body">
-    <div class="container">
-        <form id="myForm" action="/twitter" method="post" name="myForm">
-            <input type="text" name="url" placeholder="Enter URL here" class="form-control mt-3" /><br /><br />
-            <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    <div class="card-body">
+      <div
+        class="container"
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          font-size: larger;
+        "
+      >
+        <h3>All Downloader</h3>
+      </div>
+      <div class="container" style="font-size: larger">
+        <a href="/">Home</a>
+      </div>
+      <div class="video-container" style="margin-top: 30px">
+        <form
+          id="myForm"
+          action="/twitter"
+          method="post"
+          name="myForm"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <label for="" style="font-size: 20px; font-weight: bolder"
+            >Enter Url below</label
+          >
+          <br />
+          <input
+            type="text"
+            name="url"
+            placeholder="Enter URL here"
+            class="form-control mt-3"
+            style="height: 30px; width: 300px"
+          /><br />
+          <button
+            type="submit"
+            class="btn btn-primary mt-2"
+            style="font-size: large"
+          >
+            Submit
+          </button>
         </form>
 
         <!-- Display the video using an iframe -->
         <% if (downloadUrl) { %>
-        <a href="<%= downloadUrl %>" download>Download Video</a>
+        <video controls>
+          <source src="<%= downloadUrl %>" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+
+        <!-- Style the download link -->
+        <a
+          href="<%= downloadUrl %>"
+          download
+          class="btn btn-primary mt-10"
+          style="margin-top: 20px"
+          >Download Video</a
+        >
         <% } %>
+      </div>
+      <br />
+      <div class="container">
+        <% if (downloadUrl) { %>
+
+        <!-- Style the download link -->
+        <a
+          href="<%= downloadUrl %>"
+          download
+          class="btn btn-primary mt-10"
+          style="margin-top: 20px"
+          >Download Video</a
+        >
+        <% } %>
+      </div>
     </div>
-</div>
-
-
-
   </body>
-  
 </html>
