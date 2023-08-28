@@ -28,18 +28,22 @@ const getDirectVideoUrl = async (instagramUrl) => {
   });
 
   // Set up an event listener for capturing media requests
-  const videoUrlPromise = new Promise((resolve, reject) => {
-    page.on("request", (request) => {
-      if (request.resourceType() === "media") {
-        console.log("Media request intercepted:", request.url());
-        browser.close();
-        resolve(request.url());
-      } else {
-        console.log("you are here page is reloading requesting");
+const videoUrlPromise = new Promise((resolve, reject) => {
+  page.on("request", (request) => {
+    if (request.resourceType() === "media") {
+      console.log("Media request intercepted:", request.url());
+      browser.close();
+      resolve(request.url());
+    } else {
+      console.log("Non-media request intercepted:", request.url());
+      // Only continue non-media requests
+      if (!request.resourceType() || request.resourceType() !== "document") {
         request.continue();
       }
-    });
+    }
   });
+});
+
 
   // Navigate to the URL
   try {
