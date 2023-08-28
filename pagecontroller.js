@@ -1,4 +1,4 @@
-//////////////////with axios
+// /////////////////// working   with axios /////////////////////////
 
 const axios = require("axios");
 const puppeteer = require("puppeteer");
@@ -11,13 +11,23 @@ const showhomepage = async (req, res) => {
   });
 };
 
+/////
+
 const getDirectVideoUrl = async (instagramUrl) => {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
+  // Enable request interception
   await page.setRequestInterception(true);
 
-  // Create a promise that resolves when the video URL is found
+  // Set up an event listener for handling errors
+  page.on("error", (error) => {
+    console.error("Error:", error);
+    browser.close();
+    reject(error);
+  });
+
+  // Set up an event listener for capturing media requests
   const videoUrlPromise = new Promise((resolve, reject) => {
     page.on("request", (request) => {
       if (request.resourceType() === "media") {
@@ -27,21 +37,14 @@ const getDirectVideoUrl = async (instagramUrl) => {
       } else {
         request.continue();
       }
-    })
-    // Keep track of whether the video URL has been resolved
-
-    page.on("error", (error) => {
-      console.error("Error:", error);
-      browser.close();
-      reject(error);
     });
+  });
 
-    // Navigate to the URL
-    page
-      .goto(instagramUrl, { waitUntil: "domcontentloaded" })
-      .catch((error) => {
-        reject(error);
-      });
+  // Navigate to the URL
+  page.goto(instagramUrl, { waitUntil: "domcontentloaded" }).catch((error) => {
+    console.error("Navigation Error:", error);
+    browser.close();
+    reject(error);
   });
 
   // Wait for the promise to resolve
@@ -50,10 +53,10 @@ const getDirectVideoUrl = async (instagramUrl) => {
   return videoUrl;
 };
 
-const downloadVideo = async (req, res)  => {
+const downloadVideo = async (req, res) => {
   try {
-    const url=req.body.videoUrl
-    console.log("u r getting url from ejs page",url);
+    const url = req.body.videoUrl;
+    console.log("u r getting url from ejs page", url);
 
     const response = await axios({
       method: "GET",
@@ -70,7 +73,6 @@ const downloadVideo = async (req, res)  => {
       .set("Content-Disposition", "attachment; filename=" + filename);
 
     response.data.pipe(res);
-
   } catch (error) {
     console.log(`Error: ${error}`);
     res.status(500).send(error);
@@ -90,7 +92,6 @@ const twitterpost = async (req, res) => {
     console.log("just before if else condition", videoUrl);
 
     if (videoUrl) {
-
       // Download the video using Axios
       // const downloadedVideoPath = await downloadVideo(videoUrl);
 
@@ -105,4 +106,4 @@ const twitterpost = async (req, res) => {
   }
 };
 
-module.exports = { showhomepage, twitterpost,downloadVideo };
+module.exports = { showhomepage, twitterpost, downloadVideo };
