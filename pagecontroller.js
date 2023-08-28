@@ -11,8 +11,58 @@ const showhomepage = async (req, res) => {
   });
 };
 
-/////
+/////  This approach not working at production but working in local machine
 
+
+// const getDirectVideoUrl = async (instagramUrl) => {
+//   const browser = await puppeteer.launch({ headless: true });
+//   const page = await browser.newPage();
+
+//   // Enable request interception
+//   await page.setRequestInterception(true);
+
+//   // Set up an event listener for handling errors
+//   page.on("error", (error) => {
+//     console.error("Error:", error);
+//     browser.close();
+//   });
+
+//   // Set up an event listener for capturing media requests
+// const videoUrlPromise = new Promise((resolve, reject) => {
+//   page.on("request", (request) => {
+//     if (request.resourceType() === "media") {
+//       console.log("Media request intercepted:", request.url());
+//       browser.close();
+//       resolve(request.url());
+//     } else {
+//       console.log("Non-media request intercepted:", request.url());
+//       // Only continue non-media requests
+//       if (!request.resourceType() || request.resourceType() !== "document") {
+//         request.continue();
+//       }
+//     }
+//   });
+// });
+
+
+//   // Navigate to the URL
+//   try {
+//     await page.goto(instagramUrl, { waitUntil: "domcontentloaded" });
+//   } catch (error) {
+//     console.error("Navigation Error:", error);
+//     browser.close();
+//     throw error; // Throw the error to be caught by the caller
+//   }
+
+//   // Wait for the promise to resolve
+//   const videoUrl = await videoUrlPromise;
+
+//   return videoUrl;
+// };
+
+//////// This apprach working local checking for production 
+
+//// This approach is working at local checking for production////
 
 const getDirectVideoUrl = async (instagramUrl) => {
   const browser = await puppeteer.launch({ headless: true });
@@ -21,44 +71,41 @@ const getDirectVideoUrl = async (instagramUrl) => {
   // Enable request interception
   await page.setRequestInterception(true);
 
-  // Set up an event listener for handling errors
-  page.on("error", (error) => {
-    console.error("Error:", error);
-    browser.close();
-  });
-
-  // Set up an event listener for capturing media requests
-const videoUrlPromise = new Promise((resolve, reject) => {
-  page.on("request", (request) => {
-    if (request.resourceType() === "media") {
-      console.log("Media request intercepted:", request.url());
-      browser.close();
-      resolve(request.url());
-    } else {
-      console.log("Non-media request intercepted:", request.url());
-      // Only continue non-media requests
-      if (!request.resourceType() || request.resourceType() !== "document") {
+  // Create a promise that resolves when the video URL is found
+  const videoUrlPromise = new Promise((resolve, reject) => {
+    page.on("request", (request) => {
+      if (request.resourceType() === "media") {
+        console.log("Media request intercepted:", request.url());
+        browser.close();
+        resolve(request.url());
+      } else {
         request.continue();
       }
-    }
+    });
+
+    ///// reload the page for stories
+    // Keep track of whether the video URL has been resolved
+
+    page.on("error", (error) => {
+      console.error("Error:", error);
+      browser.close();
+      reject(error);
+    });
+
+    // Navigate to the URL
+    page
+      .goto(instagramUrl, { waitUntil: "domcontentloaded" })
+      .catch((error) => {
+        reject(error);
+      });
   });
-});
-
-
-  // Navigate to the URL
-  try {
-    await page.goto(instagramUrl, { waitUntil: "domcontentloaded" });
-  } catch (error) {
-    console.error("Navigation Error:", error);
-    browser.close();
-    throw error; // Throw the error to be caught by the caller
-  }
 
   // Wait for the promise to resolve
   const videoUrl = await videoUrlPromise;
 
   return videoUrl;
 };
+
 
 const downloadVideo = async (req, res) => {
   try {
