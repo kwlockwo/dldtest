@@ -13,6 +13,7 @@ const showhomepage = async (req, res) => {
 
 /////
 
+
 const getDirectVideoUrl = async (instagramUrl) => {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
@@ -24,7 +25,6 @@ const getDirectVideoUrl = async (instagramUrl) => {
   page.on("error", (error) => {
     console.error("Error:", error);
     browser.close();
-    reject(error);
   });
 
   // Set up an event listener for capturing media requests
@@ -35,17 +35,20 @@ const getDirectVideoUrl = async (instagramUrl) => {
         browser.close();
         resolve(request.url());
       } else {
+        console.log("you are here page is reloading requesting");
         request.continue();
       }
     });
   });
 
   // Navigate to the URL
-  page.goto(instagramUrl, { waitUntil: "domcontentloaded" }).catch((error) => {
+  try {
+    await page.goto(instagramUrl, { waitUntil: "domcontentloaded" });
+  } catch (error) {
     console.error("Navigation Error:", error);
     browser.close();
-    reject(error);
-  });
+    throw error; // Throw the error to be caught by the caller
+  }
 
   // Wait for the promise to resolve
   const videoUrl = await videoUrlPromise;
