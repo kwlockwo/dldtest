@@ -161,7 +161,8 @@ const getDirectVideoUrl = async (instagramUrl) => {
     // Navigate to the URL
     console.log("3. Just before page navigation");
     try {
-      await page.goto(instagramUrl, { waitUntil: "domcontentloaded" });
+      await page.goto(instagramUrl, { waitUntil: "domcontentloaded", timeout: 90000 });
+
     } catch (error) {
       console.error("Navigation Error:", error);
       browser.close();
