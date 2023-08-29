@@ -4,6 +4,7 @@ const axios = require("axios");
 const puppeteer = require("puppeteer");
 const path = require("path"); // Make sure you have path module imported
 const fs = require("fs");
+const { chromium } = require("playwright");
 
 const showhomepage = async (req, res) => {
   res.render("index", {
@@ -116,67 +117,103 @@ const showhomepage = async (req, res) => {
 
 //  //  some wait for condition
 
+// const getDirectVideoUrl = async (instagramUrl) => {
+//   const browser = await puppeteer.launch({ headless: true });
+//   const page = await browser.newPage();
+
+//   // Enable request interception
+//   await page.setRequestInterception(true);
+//   console.log("1. Request interception enabled");
+
+//   // Create a promise that resolves when the video URL is found
+//   const videoUrlPromise = new Promise(async (resolve, reject) => {
+//     console.log("2. Just entered inside promise");
+
+//     // Wait for network requests to settle down
+//     page.on('response', async (response) => {
+//       if (response.url().startsWith('https://www.instagram.com')) {
+//         console.log("Response received from:", response.url());
+//         const responseEnd = response.finished();
+//         if (responseEnd) {
+//           console.log("Network requests settled down");
+//           page.off('response');
+          
+//           // Now you can proceed with request interception logic
+//           page.on("request", (request) => {
+//             if (request.resourceType() === "media") {
+//               console.log("Media request intercepted:", request.url());
+//               browser.close();
+//               resolve(request.url());
+//             } else {
+//               request.continue();
+//             }
+//           });
+//         }
+//       }
+//     });
+
+//     // Handle errors
+//     page.on("error", (error) => {
+//       console.error("Error:", error);
+//       browser.close();
+//       reject(error);
+//     });
+
+//     // Navigate to the URL
+//     console.log("3. Just before page navigation");
+//     try {
+//       await page.goto(instagramUrl, { waitUntil: "domcontentloaded", timeout: 90000 });
+
+//     } catch (error) {
+//       console.error("Navigation Error:", error);
+//       browser.close();
+//       reject(error);
+//     }
+//     console.log("4. After page navigation");
+//   });
+
+//   // Wait for the promise to resolve
+//   const videoUrl = await videoUrlPromise;
+
+//   return videoUrl;
+// };
+// // // // // 
+
 const getDirectVideoUrl = async (instagramUrl) => {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
 
-  // Enable request interception
-  await page.setRequestInterception(true);
-  console.log("1. Request interception enabled");
-
-  // Create a promise that resolves when the video URL is found
-  const videoUrlPromise = new Promise(async (resolve, reject) => {
-    console.log("2. Just entered inside promise");
-
-    // Wait for network requests to settle down
-    page.on('response', async (response) => {
-      if (response.url().startsWith('https://www.instagram.com')) {
-        console.log("Response received from:", response.url());
-        const responseEnd = response.finished();
-        if (responseEnd) {
-          console.log("Network requests settled down");
-          page.off('response');
-          
-          // Now you can proceed with request interception logic
-          page.on("request", (request) => {
-            if (request.resourceType() === "media") {
-              console.log("Media request intercepted:", request.url());
-              browser.close();
-              resolve(request.url());
-            } else {
-              request.continue();
-            }
-          });
+  try {
+    const responsePromise = new Promise((resolve) => {
+      page.on("response", async (response) => {
+        if (response.request().resourceType() === "media") {
+          resolve(response);
         }
-      }
+      });
     });
 
-    // Handle errors
-    page.on("error", (error) => {
-      console.error("Error:", error);
-      browser.close();
-      reject(error);
-    });
+    console.log("Navigating to:", instagramUrl);
+    await page.goto(instagramUrl, { waitUntil: "domcontentloaded" });
 
-    // Navigate to the URL
-    console.log("3. Just before page navigation");
-    try {
-      await page.goto(instagramUrl, { waitUntil: "domcontentloaded", timeout: 90000 });
+    const response = await responsePromise;
 
-    } catch (error) {
-      console.error("Navigation Error:", error);
-      browser.close();
-      reject(error);
+    if (response.ok()) {
+      console.log("Media Response received from:", response.url());
+
+      // Your logic to extract the media URL from the response
+      const mediaUrl = response.url();
+      return mediaUrl;
+    } else {
+      throw new Error(`Response not OK: ${response.url()}`);
     }
-    console.log("4. After page navigation");
-  });
-
-  // Wait for the promise to resolve
-  const videoUrl = await videoUrlPromise;
-
-  return videoUrl;
+  } catch (error) {
+    console.error("Error during scraping:", error);
+    await browser.close();
+    throw error;
+  } finally {
+    await browser.close();
+  }
 };
-
 
 const downloadVideo = async (req, res) => {
   try {
