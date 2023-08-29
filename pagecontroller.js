@@ -70,15 +70,20 @@ const getDirectVideoUrl = async (instagramUrl) => {
 
   // Enable request interception
   await page.setRequestInterception(true);
+  console.log("1. request interception done ")
 
   // Create a promise that resolves when the video URL is found
   const videoUrlPromise = new Promise((resolve, reject) => {
+    console.log("2. just entered inside promise  ")
     page.on("request", (request) => {
       if (request.resourceType() === "media") {
+        console.log("5. media url found  ")
         console.log("Media request intercepted:", request.url());
         browser.close();
         resolve(request.url());
       } else {
+        console.log("6. media url not found. Again request done  ")
+        console.log("7. media url not found.this url found ",request.url())
         request.continue();
       }
     });
@@ -93,11 +98,13 @@ const getDirectVideoUrl = async (instagramUrl) => {
     });
 
     // Navigate to the URL
+    console.log("3. just before page navigation  ")
     page
       .goto(instagramUrl, { waitUntil: "domcontentloaded" })
       .catch((error) => {
         reject(error);
       });
+    console.log("4. After page navigation  ")
   });
 
   // Wait for the promise to resolve
