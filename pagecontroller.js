@@ -65,29 +65,30 @@ const twitterpost = async (req, res) => {
 
         ///one way
 
-        // await page.goto(tweetUrl, { timeout: 90000*2 });
-        // await page.waitForSelector("video", { timeout: 90000*2 });
-        // const tweetData = await page.evaluate(() => {
-        //   const videoElement = document.querySelector("video");
-        //   console.log("Inside fn",videoElement);
-        //   return {
-        //     videoUrl: videoElement.src,
-        //   };
-        // });
-        // return tweetData.videoUrl;
+        await page.goto(tweetUrl, { timeout: 90000*2 });
+        await page.waitForSelector("video", { timeout: 90000*2 });
+        const tweetData = await page.evaluate(() => {
+          const videoElement = document.querySelector("video");
+          console.log("Inside fn",videoElement);
+          return {
+            videoUrl: videoElement.src,
+          };
+        });
+        return tweetData.videoUrl;
 
         // second way
 
-        await page.goto(tweetUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
-        const videoElementHandle = await page.waitForSelector("video", { timeout: 60000 });
-        if (!videoElementHandle) {
-          throw new Error("Video element not found");
-        }
-        const videoUrl = await page.evaluate((videoElement) => {
-          return videoElement.src;
-        }, videoElementHandle);
+        // await page.goto(tweetUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
+        // const videoElementHandle = await page.waitForSelector("video", { timeout: 60000 });
+        // if (!videoElementHandle) {
+        //   throw new Error("Video element not found");
+        // }
+        // const videoUrl = await page.evaluate((videoElement) => {
+        //   return videoElement.src;
+        // }, videoElementHandle);
 
-        return videoUrl;
+        // return videoUrl;
+        ////////////////////////////
 
       } catch (error) {
         console.error("Error:", error);
