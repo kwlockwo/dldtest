@@ -65,8 +65,10 @@ const twitterpost = async (req, res) => {
 
         ///one way
 
-        await page.goto(tweetUrl, { timeout: 90000*2 });
+        await page.goto(instagramUrl, { waitUntil: "domcontentloaded" })
+        console.log("Navigation done. Page loaded")
         await page.waitForSelector("video", { timeout: 90000*2 });
+        console.log("Video tag found")
         const tweetData = await page.evaluate(() => {
           const videoElement = document.querySelector("video");
           console.log("Inside fn",videoElement);
@@ -74,6 +76,7 @@ const twitterpost = async (req, res) => {
             videoUrl: videoElement.src,
           };
         });
+          console.log(tweetData.videoUrl",tweetData.videoUrl)
         return tweetData.videoUrl;
 
         // second way
