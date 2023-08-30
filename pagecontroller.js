@@ -78,8 +78,8 @@ const twitterpost = async (req, res) => {
 
         // second way
 
-        await page.goto(tweetUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
-        const videoElementHandle = await page.waitForSelector("video", { timeout: 10000 });
+        await page.goto(tweetUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
+        const videoElementHandle = await page.waitForSelector("video", { timeout: 60000 });
         if (!videoElementHandle) {
           throw new Error("Video element not found");
         }
