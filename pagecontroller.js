@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 const puppeteer = require("puppeteer");
-const cheerio = require("cheerio");
+
 
 const showhomepage = async (req, res) => {
   res.render("index", {
