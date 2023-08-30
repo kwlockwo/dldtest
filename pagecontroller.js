@@ -76,7 +76,7 @@ const twitterpost = async (req, res) => {
             videoUrl: videoElement.src,
           };
         });
-          console.log(tweetData.videoUrl",tweetData.videoUrl)
+          console.log("tweetData.videoUrl",tweetData.videoUrl)
         return tweetData.videoUrl;
 
         // second way
