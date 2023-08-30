@@ -46,7 +46,7 @@ const twitterpost = async (req, res) => {
   try {
     const getVideoUrl = async (tweetUrl) => {
       const browser = await puppeteer.launch({
-        headless: true,
+        headless: false,
         args: [
           "--disable-setuid-sandbox",
           "--no-sandbox",
