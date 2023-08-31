@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "index.js",
     "start": "nodemon index.js",
-    "build": "yarn install && yarn build"  // Adjust the build command accordingly
+    "build": "yarn install && yarn build"  
 
 
   },
