@@ -168,10 +168,13 @@ const twitterpost = async (req, res) => {
       // const browser = await puppeteer.launch();
       const browser = await puppeteer.launch({
         args: [
+          "--proxy-server='direct://'", 
+          '--proxy-bypass-list=*',
           "--disable-setuid-sandbox",
           "--no-sandbox",
           "--single-process",
-          "--no-zygote",
+          "--no-zygote"
+        
         ],
         executablePath:
           process.env.NODE_ENV === "production"
