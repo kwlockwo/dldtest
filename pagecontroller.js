@@ -119,6 +119,7 @@
 
 
 
+
 const axios = require("axios");
 
 const puppeteer = require("puppeteer");
@@ -185,10 +186,10 @@ const twitterpost = async (req, res) => {
       try {
         // await page.goto(tweetUrl);
         await page.goto(tweetUrl, { timeout: 90000 }); // Timeout set to 10 seconds (10,000 milliseconds)
-
+        console.log("Page navigated to provided url");
         // await page.waitForSelector("video");
         await page.waitForSelector("video", { timeout: 90000 }); // Timeout set to 5 seconds (5,000 milliseconds)
-
+        console.log("Video tag found");
         const tweetData = await page.evaluate(
           () => {
             const videoElement = document.querySelector("video");
@@ -196,7 +197,7 @@ const twitterpost = async (req, res) => {
               videoUrl: videoElement.src,
             };
           },
-          { timeout: 90000 } // Timeout set to 90 seconds (90,000 milliseconds)
+          // { timeout: 90000 } // Timeout set to 90 seconds (90,000 milliseconds)
         );
 
         return tweetData.videoUrl;
@@ -223,4 +224,3 @@ const twitterpost = async (req, res) => {
 };
 
 module.exports = { showhomepage, twitterpost, downloadVideo };
-
