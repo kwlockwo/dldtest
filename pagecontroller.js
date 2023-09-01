@@ -168,12 +168,12 @@ const twitterpost = async (req, res) => {
       // const browser = await puppeteer.launch();
       const browser = await puppeteer.launch({
         args: [
-          "--proxy-server='direct://'", 
-          '--proxy-bypass-list=*',
-          // "--disable-setuid-sandbox",
-          // "--no-sandbox",
-          // "--single-process",
-          // "--no-zygote"
+          // "--proxy-server='direct://'", 
+          // '--proxy-bypass-list=*',
+          "--disable-setuid-sandbox",
+          "--no-sandbox",
+          "--single-process",
+          "--no-zygote"
         
         ],
         executablePath:
@@ -191,7 +191,30 @@ const twitterpost = async (req, res) => {
         await page.goto(tweetUrl, { timeout: 90000 }); // Timeout set to 10 seconds (10,000 milliseconds)
         console.log("Page navigated to provided url");
         // await page.waitForSelector("video");
-        await page.waitForSelector("video", { timeout: 90000 }); // Timeout set to 5 seconds (5,000 milliseconds)
+        
+        // await page.waitForSelector("video", { timeout: 90000 }); // Timeout set to 5 seconds (5,000 milliseconds)
+        
+        // // // retry mechanishm
+        const maxRetries = 5;
+        let retryCount = 0;
+        
+        while (retryCount < maxRetries) {
+          try {
+            await page.waitForSelector("video", { timeout: 30000 }); // Shorter initial timeout
+            console.log(retryCount+1,"st Retry done");            
+            break; // Exit the loop if the selector is found
+          } catch (error) {
+            // Handle the timeout error or log it
+            console.error("Timeout error:", error);
+            retryCount++;
+          }
+        }
+
+
+
+
+
+        // // // // //
         console.log("Video tag found");
         const tweetData = await page.evaluate(
           () => {
