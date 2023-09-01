@@ -231,6 +231,8 @@ const twitterpost = async (req, res) => {
       } catch (error) {
         console.error("Error:", error);
       } finally {
+          // Close the page and browser when done
+        await page.close();
         await browser.close();
       }
     };
