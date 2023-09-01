@@ -186,30 +186,30 @@ const twitterpost = async (req, res) => {
 
       
       const page = await browser.newPage();
-      await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36')
+      // await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36')
       try {
         // await page.goto(tweetUrl);
         await page.goto(tweetUrl, { timeout: 90000 }); // Timeout set to 10 seconds (10,000 milliseconds)
         console.log("Page navigated to provided url");
         // await page.waitForSelector("video");
         
-        // await page.waitForSelector("video", { timeout: 90000 }); // Timeout set to 5 seconds (5,000 milliseconds)
+        await page.waitForSelector("video", { timeout: 90000 }); // Timeout set to 5 seconds (5,000 milliseconds)
         
         // // // retry mechanishm
-        const maxRetries = 5;
-        let retryCount = 0;
+        // const maxRetries = 5;
+        // let retryCount = 0;
         
-        while (retryCount < maxRetries) {
-          try {
-            await page.waitForSelector("video", { timeout: 30000 }); // Shorter initial timeout
-            console.log(retryCount+1,"st Retry done");            
-            break; // Exit the loop if the selector is found
-          } catch (error) {
-            // Handle the timeout error or log it
-            console.error("Timeout error:", error);
-            retryCount++;
-          }
-        }
+        // while (retryCount < maxRetries) {
+        //   try {
+        //     await page.waitForSelector("video", { timeout: 30000 }); // Shorter initial timeout
+        //     console.log(retryCount+1,"st Retry done");            
+        //     break; // Exit the loop if the selector is found
+        //   } catch (error) {
+        //     // Handle the timeout error or log it
+        //     console.error("Timeout error:", error);
+        //     retryCount++;
+        //   }
+        // }
 
 
 
@@ -232,7 +232,7 @@ const twitterpost = async (req, res) => {
         console.error("Error:", error);
       } finally {
           // Close the page and browser when done
-        await page.close();
+        // await page.close();
         await browser.close();
       }
     };
