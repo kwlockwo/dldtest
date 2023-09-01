@@ -163,9 +163,9 @@ const twitterpost = async (req, res) => {
   }
 
   try {
-    const getVideoUrl = async (tweetUrl) => {
+        const getVideoUrl = async (tweetUrl) => {
+      // const browser = await puppeteer.launch();
       const browser = await puppeteer.launch({
-        headless: true,
         args: [
           "--disable-setuid-sandbox",
           "--no-sandbox",
@@ -178,18 +178,18 @@ const twitterpost = async (req, res) => {
             : puppeteer.executablePath(),
       });
 
+
+      
       const page = await browser.newPage();
-      // await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36');
 
       try {
-        ///one way
-
+        // await page.goto(tweetUrl);
         await page.goto(tweetUrl, { timeout: 90000 }); // Timeout set to 10 seconds (10,000 milliseconds)
-        console.log("Navigation done. Page loaded");
-           // await page.waitForSelector("video");
+
+        // await page.waitForSelector("video");
         await page.waitForSelector("video", { timeout: 90000 }); // Timeout set to 5 seconds (5,000 milliseconds)
-        console.log("Video tag found");
-            const tweetData = await page.evaluate(
+
+        const tweetData = await page.evaluate(
           () => {
             const videoElement = document.querySelector("video");
             return {
@@ -198,22 +198,8 @@ const twitterpost = async (req, res) => {
           },
           { timeout: 90000 } // Timeout set to 90 seconds (90,000 milliseconds)
         );
-        console.log("tweetData.videoUrl", tweetData.videoUrl);
+
         return tweetData.videoUrl;
-
-        // // second way
-
-        // await page.goto(tweetUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
-        // const videoElementHandle = await page.waitForSelector("video", { timeout: 10000 });
-        // if (!videoElementHandle) {
-        //   throw new Error("Video element not found");
-        // }
-        // const videoUrl = await page.evaluate((videoElement) => {
-        //   return videoElement.src;
-        // }, videoElementHandle);
-
-        // return videoUrl;
-        // // // //  // // //
       } catch (error) {
         console.error("Error:", error);
       } finally {
@@ -221,7 +207,7 @@ const twitterpost = async (req, res) => {
       }
     };
 
-    const videoUrl = await getVideoUrl(tweetUrl );
+    const videoUrl = await getVideoUrl(tweetUrl);   
 
     if (videoUrl) {
       // Instead of saving the file, send the video URL to the client
