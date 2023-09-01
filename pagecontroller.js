@@ -185,7 +185,7 @@ const twitterpost = async (req, res) => {
 
       
       const page = await browser.newPage();
-
+      await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36')
       try {
         // await page.goto(tweetUrl);
         await page.goto(tweetUrl, { timeout: 90000 }); // Timeout set to 10 seconds (10,000 milliseconds)
