@@ -170,10 +170,10 @@ const twitterpost = async (req, res) => {
         args: [
           "--proxy-server='direct://'", 
           '--proxy-bypass-list=*',
-          "--disable-setuid-sandbox",
-          "--no-sandbox",
-          "--single-process",
-          "--no-zygote"
+          // "--disable-setuid-sandbox",
+          // "--no-sandbox",
+          // "--single-process",
+          // "--no-zygote"
         
         ],
         executablePath:
