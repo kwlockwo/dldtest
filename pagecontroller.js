@@ -319,6 +319,8 @@ const showhomepage = async (req, res) => {
 
 const getDirectVideoUrl = async (instagramUrl) => {
   const browser = await puppeteer.launch({ headless:"new" });
+  const browserVersion = await browser.version();
+  console.log('Chromium Version:', browserVersion);
   const page = await browser.newPage();
 
   // Enable request interception
