@@ -328,6 +328,11 @@ const getDirectVideoUrl = async (instagramUrl) => {
   await page.setRequestInterception(true);
   console.log("1 setRequestInterception(true) this done");
 
+ // // Log all responses
+  page.on("response", (response) => {
+    console.log("Response URL:", response.url());
+  });
+
   // Navigate to the URL
   console.log("5 just start of navigation");
   page.goto(instagramUrl, { waitUntil: "domcontentloaded" }).catch((error) => {
