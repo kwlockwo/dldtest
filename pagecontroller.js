@@ -343,7 +343,8 @@ const getDirectVideoUrl = async (instagramUrl) => {
         browser.close();
         resolve(request.url());
       } else {
-        console.log("4. request continuingggggg");
+        console.log("4. request continuingggggg",request.url());
+        console.log("Resource Type:", request.resourceType()); 
         request.continue();
       }
     });
