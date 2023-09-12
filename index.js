@@ -1,4 +1,6 @@
 const express = require('express');   
+// Import the path module
+const path = require('path');
 
 
 const { showhomepage, twitterpost ,downloadVideo} = require('./pagecontroller');
@@ -8,7 +10,9 @@ const app = express();
 const port = 3000;
 
 
-app.set("view engine", "ejs");
+// app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
 
 app.use(
   express.urlencoded({
