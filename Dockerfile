@@ -18,11 +18,13 @@
 FROM ghcr.io/puppeteer/puppeteer:21.1.1
 
 # Install Chrome
-RUN apt-get update && apt-get -y install wget && \
+RUN apt-get update && \
+    apt-get -y install wget && \
     wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
     dpkg -i google-chrome-stable_current_amd64.deb && \
     apt-get -y install -f && \
     rm google-chrome-stable_current_amd64.deb
+
 
 # Set environment variables for Puppeteer
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
