@@ -11,7 +11,6 @@
 # CMD [ "node", "index.js" ]
 
 
-
 # Use the Puppeteer base image
 FROM ghcr.io/puppeteer/puppeteer:21.1.1
 
@@ -64,4 +63,3 @@ COPY . .
 
 # Define the command to run your Node.js application
 CMD [ "node", "index.js" ]
-]
