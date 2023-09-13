@@ -11,7 +11,6 @@
 # CMD [ "node", "index.js" ]
 
 
-
 # Use the Puppeteer base image
 FROM ghcr.io/puppeteer/puppeteer:21.1.1
 
@@ -45,7 +44,11 @@ RUN curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - 
 RUN apt-get purge --auto-remove -y curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Switch back to non-root user
+# Create the "chrome" user
+RUN groupadd -r chrome && useradd -r -g chrome -G audio,video chrome \
+    && mkdir -p /home/chrome/Downloads && chown -R chrome:chrome /home/chrome
+
+# Switch back to the "chrome" user
 USER chrome
 
 # Set environment variables for Puppeteer
