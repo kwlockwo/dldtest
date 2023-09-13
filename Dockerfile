@@ -17,6 +17,7 @@
 FROM ghcr.io/puppeteer/puppeteer:21.1.1
 
 # Install Chrome
+USER root
 RUN apt-get update && apt-get install -y \
     apt-transport-https \
     ca-certificates \
@@ -38,6 +39,8 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     && apt-get purge --auto-remove -y curl \
     && rm -rf /var/lib/apt/lists/*
+USER chrome
+
 
 # Add chrome user
 RUN groupadd -r chrome && useradd -r -g chrome -G audio,video chrome \
@@ -46,8 +49,6 @@ RUN groupadd -r chrome && useradd -r -g chrome -G audio,video chrome \
 # Copy local.conf file (adjust the path if necessary)
 # COPY ./local.conf /etc/fonts/local.conf
 
-# Run Chrome as non-privileged user
-USER chrome
 
 # Autorun Chrome
 ENTRYPOINT [ "google-chrome" ]
