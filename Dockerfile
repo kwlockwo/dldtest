@@ -12,12 +12,10 @@
 
 
 
+# 
 
 
-# Use the Puppeteer base image
 FROM ghcr.io/puppeteer/puppeteer:21.1.1
-
-# Install Chrome
 # Install Chrome
 RUN apt-get update && apt-get install -y \
 	apt-transport-https \
@@ -67,20 +65,15 @@ ENTRYPOINT [ "google-chrome" ]
 CMD [ "--user-data-dir=/data" ]
 
 
-# Set environment variables for Puppeteer
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
-# Set the working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and install dependencies
 COPY package*.json ./
 RUN yarn install
-
-# Copy your application files
 COPY . .
-
-# Define the command to run your Node.js application
 CMD [ "node", "index.js" ]
+
+
 
