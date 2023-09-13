@@ -10,7 +10,6 @@
 # COPY . .
 # CMD [ "node", "index.js" ]
 
-
 # Use the Puppeteer base image
 FROM ghcr.io/puppeteer/puppeteer:21.1.1
 
@@ -27,7 +26,7 @@ RUN apt-get update && apt-get install -y \
     libcanberra-gtk* \
     libgl1-mesa-dri \
     libgl1-mesa-glx \
-    libpango-1.0-0 \  # Corrected package name
+    libpango-1.0-0 \
     libpulse0 \
     libv4l-0 \
     fonts-symbola \
