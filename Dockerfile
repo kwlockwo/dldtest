@@ -10,6 +10,8 @@
 # COPY . .
 # CMD [ "node", "index.js" ]
 
+
+
 # Use the Puppeteer base image
 FROM ghcr.io/puppeteer/puppeteer:21.1.1
 
