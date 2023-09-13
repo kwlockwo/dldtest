@@ -13,7 +13,6 @@
 
 
 # 
-
 # Use the Puppeteer base image
 FROM ghcr.io/puppeteer/puppeteer:21.1.1
 
@@ -44,7 +43,7 @@ RUN apt-get update && apt-get install -y \
 RUN groupadd -r chrome && useradd -r -g chrome -G audio,video chrome \
     && mkdir -p /home/chrome/Downloads && chown -R chrome:chrome /home/chrome
 
-# Copy local.conf file (assuming it's in the same directory as the Dockerfile)
+# Copy local.conf file (adjust the path if necessary)
 COPY ./local.conf /etc/fonts/local.conf
 
 # Run Chrome as non-privileged user
@@ -58,15 +57,17 @@ CMD [ "--user-data-dir=/data" ]
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
-
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
-
+# Set the working directory
 WORKDIR /usr/src/app
 
+# Copy package.json and install dependencies
 COPY package*.json ./
 RUN yarn install
+
+# Copy your application files
 COPY . .
+
+# Define the command to run your Node.js application
 CMD [ "node", "index.js" ]
 
 
