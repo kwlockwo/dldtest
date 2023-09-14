@@ -72,7 +72,7 @@ const twitterpost = async (req, res) => {
         // await page.goto(tweetUrl);
         // await page.goto(tweetUrl, { timeout: 90000 }); // Timeout set to 10 seconds (10,000 milliseconds)
 
-        await page.goto(tweetUrl, { waitUntil: "domcontentloaded" });
+        page.goto(tweetUrl, { waitUntil: "domcontentloaded" });
         console.log("Page navigated to provided url");
         // await page.waitForSelector("video");
 
