@@ -51,7 +51,7 @@ const twitterpost = async (req, res) => {
     const getVideoUrl = async (tweetUrl) => {
       // const browser = await puppeteer.launch();
       const browser = await puppeteer.launch({
-        headless: "true",
+        headless: true,
         args: [
           // "--proxy-server='direct://'",
           // '--proxy-bypass-list=*',
